@@ -19,7 +19,7 @@ class SdkSessionHandle implements CopilotSessionHandle {
   }
 
   async send(input: string): Promise<string | undefined> {
-    const response = await this.session.sendAndWait({ prompt: input }, 120_000);
+    const response = await this.session.sendAndWait({ prompt: input }, 120000000);
     const content = (response as { data?: { content?: unknown } } | undefined)?.data?.content;
 
     return typeof content === "string" ? content : undefined;

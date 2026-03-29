@@ -1,7 +1,8 @@
 # GitHub Copilot CLI 命令参考
 
+使用 copilot sdk开发一个code cli，确保拥有和copilot cli相同的命令功能，尽可能复用 copilot cli 减少代码， 首先设计整个app的架构并输出设计文档和 todo 清单，例如：初始化项目并安装npm i @github/copilot-sdk以及必要的依赖库， 确定copilot cli的功能模块清单， 根据功能清单设计测试用例，实现功能清单并通过测试用例，最后更新整个文档。
+
 查找有助于你有效使用 Copilot 命令行界面（CLI） 的命令和键盘快捷键。
-|
 
 ## 交互式接口中的斜杠命令
 

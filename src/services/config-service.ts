@@ -17,7 +17,15 @@ export class ConfigService {
   constructor(private readonly store: ConfigStore) {}
 
   async load(initialWorkingDirectory: string): Promise<AppConfig> {
-    this.config = await this.store.load(initialWorkingDirectory);
+    const normalizedWorkingDirectory = normalizeDirectory(initialWorkingDirectory);
+    const storedConfig = await this.store.load(normalizedWorkingDirectory);
+    this.config = sanitizeConfig(
+      {
+        ...storedConfig,
+        allowedDirectories: [...storedConfig.allowedDirectories, normalizedWorkingDirectory],
+      },
+      normalizedWorkingDirectory,
+    );
     await this.store.save(this.config);
     return this.config;
   }
