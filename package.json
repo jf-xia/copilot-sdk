@@ -1,0 +1,45 @@
+{
+  "name": "code-cli",
+  "version": "0.1.0",
+  "description": "A Copilot SDK powered compatibility CLI that reuses Copilot CLI capabilities through JSON-RPC.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "code-cli": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "docs"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "keywords": [
+    "copilot",
+    "cli",
+    "sdk",
+    "typescript"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "@github/copilot-sdk": "^0.2.0",
+    "commander": "^14.0.3",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.2"
+  }
+}
