@@ -43,6 +43,19 @@ export class PermissionService {
       };
     }
 
+    if (request.kind === "shell") {
+      const toolName = typeof request.toolName === "string" ? request.toolName : "shell";
+
+      if (config.allowedTools.includes(toolName) || config.allowedTools.includes("shell")) {
+        return APPROVED;
+      }
+
+      return {
+        kind: "denied-by-rules",
+        rules: ["Shell commands are restricted unless allow-all is enabled or shell is explicitly allowed tool"],
+      };
+    }
+
     if (request.kind === "custom-tool" || request.kind === "mcp") {
       const toolName = typeof request.toolName === "string" ? request.toolName : undefined;
 
@@ -53,6 +66,13 @@ export class PermissionService {
       return {
         kind: "denied-by-rules",
         rules: [TOOL_ACCESS_RULE],
+      };
+    }
+
+    if (request.kind === "url" || request.kind === "memory" || request.kind === "hook") {
+      return {
+        kind: "denied-by-rules",
+        rules: ["URL/memory/hook operations are restricted unless allow-all is enabled."],
       };
     }
 

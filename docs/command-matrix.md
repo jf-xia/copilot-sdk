@@ -34,7 +34,7 @@
 | `/review` | `[PROMPT]` | delegate | 透传到当前会话 | 参数透传 |
 | `/session` | `[checkpoints [n]\|files\|plan\|rename NAME]` | mixed | `rename` 透传，其余子命令本地/SDK 展示 | 计划文件、文件列表、rename 透传 |
 | `/share` | `[file\|gist] [PATH]` | delegate | 透传到当前会话 | 参数透传 |
-| `/skills` | `[list\|info\|add\|remove\|reload] [ARGS...]` | delegate | 透传到当前会话 | 长参数透传 |
+| `/skills` | `[list\|info\|add\|remove\|reload] [ARGS...]` | delegate | 透传到当前会话 | 长参数透传，保持原始字符串不改写 |
 | `/terminal-setup` |  | delegate | 透传到当前会话 | 原样发送 |
 | `/theme` | `[show\|set\|list] [auto\|THEME-ID]` | delegate | 透传到当前会话 | 参数透传 |
 | `/usage` |  | sdk | 汇总当前会话统计 | 消息数、工具数 |
@@ -45,6 +45,7 @@
 - 命令注册表已经覆盖表中全部命令入口。
 - `local` 和 `sdk` 命令由 `CommandRouter` 做显式分流。
 - `delegate` 和 `mixed` 的透传路径会保留原始命令字符串，不做语义改写。
+- `/skills` 已有回归测试覆盖，验证其输入会经由统一 delegate 路径直接送入底层 Copilot 会话。
 - 对于 SDK 没有直接公开管理 API 的场景，优先复用底层 Copilot 会话，而不是在本地重写一套逻辑。
 
 ## 说明

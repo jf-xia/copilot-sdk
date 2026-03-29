@@ -50,6 +50,8 @@
 - `/skills`
 - `/theme`
 
+其中 `/skills` 已通过自动化测试验证：`CommandRouter` 不会在本地重写其语义，而是将完整输入原样交给底层 Copilot 会话处理。
+
 ## 项目结构
 
 ```text
@@ -113,6 +115,8 @@ npm run typecheck
 
 - `npm test`
 - `npm run typecheck`
+
+`/skills` 的透传回归测试位于 `tests/router.spec.ts`，用于确认带子命令、带引号参数和额外选项的输入会被原样发送到底层会话。
 
 ## 参考文档
 

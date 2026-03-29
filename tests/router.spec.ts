@@ -79,6 +79,25 @@ describe("CommandRouter", () => {
     expect(fakeSession.sentInputs).toEqual(expect.arrayContaining(["/session rename demo", "/unknown foo"]));
   });
 
+  it("delegates /skills commands unchanged to the active Copilot session", async () => {
+    const harness = await createHarness();
+    const sessionId = harness.sessionService.getCurrentSessionInfo()?.sessionId;
+    if (!sessionId) {
+      throw new Error("Expected an active session.");
+    }
+
+    const fakeSession = harness.gateway.getSession(sessionId);
+    if (!fakeSession) {
+      throw new Error("Expected fake session to exist.");
+    }
+
+    const skillsCommand = '/skills info "find-skills" --json';
+    fakeSession.setResponse(skillsCommand, "skills passthrough");
+
+    await expect(harness.router.execute(skillsCommand)).resolves.toMatchObject({ output: "skills passthrough" });
+    expect(fakeSession.sentInputs).toContain(skillsCommand);
+  });
+
   it("uses SDK auth status for /user show", async () => {
     const harness = await createHarness();
     const result = await harness.router.execute("/user show");

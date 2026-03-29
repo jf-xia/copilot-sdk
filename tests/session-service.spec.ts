@@ -69,7 +69,7 @@ describe("SessionService", () => {
     expect(await harness.sessionService.listCheckpoints()).toEqual(["step-1.md"]);
   });
 
-  it("sends raw prompts through to the active session", async () => {
+  it("sends /skills prompts through to the active session unchanged", async () => {
     const harness = await createHarness();
     const session = await harness.sessionService.start(undefined);
     const fakeSession = harness.gateway.getSession(session.sessionId);
@@ -77,9 +77,10 @@ describe("SessionService", () => {
       throw new Error("Expected fake session to exist.");
     }
 
-    fakeSession.setResponse("/review fix it", "delegated review");
+    const skillsCommand = '/skills info "find-skills" --json';
+    fakeSession.setResponse(skillsCommand, "delegated skills");
 
-    await expect(harness.sessionService.send("/review fix it")).resolves.toBe("delegated review");
-    expect(fakeSession.sentInputs).toContain("/review fix it");
+    await expect(harness.sessionService.send(skillsCommand)).resolves.toBe("delegated skills");
+    expect(fakeSession.sentInputs).toContain(skillsCommand);
   });
 });

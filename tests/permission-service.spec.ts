@@ -77,7 +77,8 @@ describe("PermissionService", () => {
     const permissionService = new PermissionService(configService);
 
     expect(permissionService.handlePermissionRequest({ kind: "shell" } as never, configService.getConfig())).toEqual({
-      kind: "denied-no-approval-rule-and-could-not-request-from-user",
+      kind: "denied-by-rules",
+      rules: ["Shell commands are restricted unless allow-all is enabled or shell is explicitly allowed tool"],
     });
 
     await configService.setAllowAll(true);
@@ -98,6 +99,23 @@ describe("PermissionService", () => {
       permissionService.handlePermissionRequest(
         { kind: "custom-tool", toolName: "grep_search" } as never,
         configService.getConfig(),
+      ),
+    ).toEqual({ kind: "approved" });
+  });
+
+  it("approves shell requests when shell tool is explicitly allowed", async () => {
+    const rootDirectory = await mkdtemp(path.join(tmpdir(), "code-cli-permissions-"));
+    const configService = await createConfigService(rootDirectory);
+    const permissionService = new PermissionService(configService);
+
+    const config = await configService.addAllowedDirectory(rootDirectory); // ensure base config exists
+    const nextConfig = await configService.setAllowAll(false);
+    nextConfig.allowedTools.push("shell");
+
+    expect(
+      permissionService.handlePermissionRequest(
+        { kind: "shell", fullCommandText: "echo hi" } as never,
+        { ...nextConfig },
       ),
     ).toEqual({ kind: "approved" });
   });

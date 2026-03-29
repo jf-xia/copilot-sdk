@@ -9,6 +9,12 @@ export function defaultConfigPath(): string {
   return path.join(homedir(), ".code-cli", "config.json");
 }
 
+function isEnvAllowAll(): boolean {
+  const value = process.env.COPILOT_ALLOW_ALL ?? true;
+
+  return ["1", "true", "yes", "on"].includes(value.toLowerCase());
+}
+
 export function createDefaultConfig(workingDirectory: string): AppConfig {
   const normalizedWorkingDirectory = normalizeDirectory(workingDirectory);
 
@@ -17,7 +23,7 @@ export function createDefaultConfig(workingDirectory: string): AppConfig {
     model: DEFAULT_MODEL,
     workingDirectory: normalizedWorkingDirectory,
     recentSessionIds: [],
-    allowAll: false,
+    allowAll: isEnvAllowAll(),
     allowedDirectories: [normalizedWorkingDirectory],
     allowedTools: [],
     theme: "auto",
